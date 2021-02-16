@@ -25,32 +25,32 @@ set-location "vagranti-dev.php_i${instance}"
 # Configuring
 
 ```powershell
-$instance=2
-$group="Frenchex2 VagrantI I${instance}"
-$keyboardLayout="us"
-$env = "dev"
+$instance=1                                     # Instance number
+$group="Frenchex2 VagrantI I${instance}"        # Group for VMs
+$keyboardLayout="us"                            # Keyboard layout when you ssh into
+$env = "dev"                                    # Your env, will be used at some point
 
-$masters = 1
-$mastersRamMB = 2048
-$mastersVcpus = 2
-$mastersIpPattern = "10.100.2.#{NUMBER}"
-$mastersIpStart = 2
-$mastersBox = "docker-k8s"
+$masters = 1                                    # How many masters do you want ? 
+$mastersRamMB = 2048                            # How much memory each master can take ?
+$mastersVcpus = 2                               # How much vcpus each master can take ?
+$mastersIpPattern = "10.100.2.#{NUMBER}"        # Which IP pattern to use ?
+$mastersIpStart = 2                             # Start IP from ?
+$mastersBox = "docker-k8s"                      # Which box to use for each master ?
 
-$workers = 2
-$workersRamMB = 3076
-$workersVcpus = 2
-$WorkersIPPattern = "10.100.2.#{NUMBER}"
-$workersIpStart = 100
-$workersBox = "docker-k8s"
+$workers = 2                                    # How many Workers do you want ?
+$workersRamMB = 3076                            # How much memory each worker can take ?
+$workersVcpus = 2                               # How much vcpus each worker can take ?
+$WorkersIPPattern = "10.100.2.#{NUMBER}"        # Which IP pattern to use ?
+$workersIpStart = 100                           # Start IP from ?
+$workersBox = "docker-k8s"                      # Which box to use for each worker ?
 
-$devs = 1
-$devsRamMB = 1024
-$devsVcpus = 4
-$DevsIPPattern = "10.100.2.#{NUMBER}"
-$DevsIpStart = 200
-$devsBox = "debian/contrib-buster64"
-$CodePath = "c:\\code\\"
+$devs = 1                                       # How many side-VM do you want ?
+$devsRamMB = 1024                               # How much memory each worker can take ?
+$devsVcpus = 4                                  # How much vcpus each worker can take ?
+$DevsIPPattern = "10.100.2.#{NUMBER}"           # Which IP pattern to use ?
+$DevsIpStart = 200                              # Start IP from ?
+$devsBox = "debian/contrib-buster64"            # Which box to use for each side VM ?
+$CodePath = "c:\\code\\"                        # Shared folder on host
 
 # will produce ./config-$env.json
 # will merge ./config.json & ./config-$env.json into ./instance/config.json
