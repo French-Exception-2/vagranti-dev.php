@@ -4,5 +4,6 @@
 echo "vagrant        ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
 sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
 
-# Disable daily apt unattended updates. Is this needed for Debian?
-# echo 'APT::Periodic::Enable "0";' >> /etc/apt/apt.conf.d/10periodic
+sudo apt-get install -y wget
+wget -L https://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub -o /home/vagrant/.ssh/authorized_keys
+chmod 0600 /home/vagrant/.ssh/authorized_keys
