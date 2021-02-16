@@ -1,0 +1,227 @@
+{
+    "vagrant": {
+        "plugins": {
+            "vagrant-hostmanager": {
+                "version": ">= 1.8.9",
+                "enabled": true,
+                "config": {
+                    "hostmanager.enabled": true,
+                    "hostmanager.manage_host": true,
+                    "hostmanager.manage_guest": true
+                }
+            },
+            "vagrant-vbguest": {
+                "version": ">= 0.16.0",
+                "enabled": true,
+                "config": {
+                    "vbguest.auto_update": false,
+                    "vbguest.auto_reboot": false,
+                    "vbguest.installer_arguments": [
+                        "--nox11"
+                    ]
+                }
+            },
+            "vagrant-reload": {
+                "version": ">= 0.0.1",
+                "enabled": true
+            }
+        }
+    },
+    "nodes-types": {
+        "dev-infra": {
+            "vcpus": 4,
+            "cpucap": "100",
+            "os_type": "Debian_64",
+            "os_version": "10.8.0",
+            "ram_mb": 512,
+            "vram_mb": 8,
+            "3d": "off",
+            "bioslogoimagepath": "./image.bmp",
+            "pagefusion": "on",
+            "gui": false,
+            "provider": "virtualbox",
+            "enabled": true,
+            "box": "debian/contrib-buster64",
+            "provisioning": {
+                "cat-infos": {
+                    "env": {
+                        "device": "eth1"
+                    }
+                },
+                "ipv6.disable": {},
+                "apt-cacherng.install": {}
+            }
+        },
+        "dev": {
+            "vcpus": 4,
+            "cpucap": "100",
+            "os_type": "Debian_64",
+            "os_version": "10.8.0",
+            "ram_mb": 1024,
+            "vram_mb": 8,
+            "3d": "off",
+            "bioslogoimagepath": "./image.bmp",
+            "pagefusion": "on",
+            "gui": false,
+            "provider": "virtualbox",
+            "enabled": true,
+            "box": "debian/contrib-buster64",
+            "provisioning": {
+                "cat-infos": {
+                    "env": {
+                        "device": "eth1"
+                    }
+                },
+                "apt.configure": {
+                },
+                "apt.proxy.configure": {
+                    "env": {
+                        "APT_IP_FILE": "/vagrant/instance/IPv4/vdi-01-infra-dev-00"
+                    }
+                },
+                "jq.install": {},
+                "docker-cli.install": {},
+                "docker-cli.configure": {
+                    "env": {
+                        "configs_dir": "/vagrant/instance/docker-hosts/"
+                    }
+                },
+                "docker.compose.install": {},
+                "yq.install": {},
+                "k8s-cli.configure": {},
+                "ssh.keys.configure": {},
+                "powershell.install": {},
+                "github.projects.clone": {
+                    "ext": "ps1"
+                },
+                "ssh.keys.copy": {}
+            },
+            "files": {
+                "ssh-key.id_rsa": {
+                    "source": "./instance/ssh/id_rsa",
+                    "destination": "/home/vagrant/.ssh/id_rsa",
+                    "enabled": true
+                },
+                "ssh-key.id_rsa.pub": {
+                    "source": "./instance/ssh/id_rsa.pub",
+                    "destination": "/home/vagrant/.ssh/id_rsa.pub",
+                    "enabled": true
+                }
+            }
+        },
+        "dev-docker": {
+            "vcpus": 1,
+            "cpucap": "100",
+            "os_type": "Debian_64",
+            "os_version": "10.8.0",
+            "ram_mb": 2048,
+            "vram_mb": 16,
+            "3d": "off",
+            "bioslogoimagepath": "./image.bmp",
+            "pagefusion": "on",
+            "gui": false,
+            "provider": "virtualbox",
+            "enabled": true,
+            "box": "debian-k8s",
+            "provisioning": {
+                "cat-infos": {
+                    "env": {
+                        "device": "enp0s8"
+                    }
+                },
+                "ipv6.disable": {},
+                "keyboard.layout.configure": {},
+                "apt.configure": {
+                },
+                "apt.proxy.configure": {
+                    "env": {
+                        "APT_IP_FILE": "/vagrant/instance/IPv4/vdi-01-infra-dev-00"
+                    }
+                },
+                "docker.install": {},
+                "docker.configure": {
+                    "env": {
+                        "bind_address": "0.0.0.0"
+                    }
+                },
+                "k8s.install": {},
+                "k8s.configure": {
+                    "env": {
+                        "k_iface": "enp0s8"
+                    }
+                }
+            },
+            "shared_folders": {}
+        }
+    },
+    "nodes": {
+        "infra-dev": {
+            "vagrant_type": "dev-infra",
+            "name": "vdi-#{VAGRANTDEV_INSTANCE}-infra-dev-#{NUMBER}",
+            "instances": 1,
+            "enabled": true,
+            "primary": false,
+            "vcpus": 4,
+            "ip": "10.100.2.#{NUMBER}",
+            "ip.start": 20
+        },
+        "dev": {
+            "vagrant_type": "dev",
+            "name": "vdi-#{VAGRANTDEV_INSTANCE}-dev-#{NUMBER}",
+            "instances": 1,
+            "enabled": true,
+            "primary": true,
+            "vcpus": 4,
+            "ip": "10.100.2.#{NUMBER}",
+            "ip.start": 250,
+            "ram_mb": 1024,
+            "shared_folders": {
+                "code": {
+                    "host_path": "c:\\code\\",
+                    "guest_path": "/code",
+                    "enabled": true,
+                    "type": "virtualbox"
+                }
+            }
+        },
+        "dev-master": {
+            "vagrant_type": "dev-docker",
+            "instances": 1,
+            "enabled": true,
+            "name": "vdi-#{VAGRANTDEV_INSTANCE}-dev-master-#{NUMBER}",
+            "vcpus": 4,
+            "ip": "10.100.2.#{NUMBER}",
+            "ip.start": 2,
+            "ram_mb": 2048,
+            "provisioning": {
+                "k8s.configure": {
+                    "MASTER": "vdi-01-dev-master-00",
+                    "ROLE": "master",
+                    "k_iface": "eth1"
+                }
+            }
+        },
+        "dev-worker": {
+            "vagrant_type": "dev-docker",
+            "instances": 2,
+            "enabled": true,
+            "name": "vdi-#{VAGRANTDEV_INSTANCE}-dev-worker-#{NUMBER}",
+            "vcpus": 4,
+            "ip": "10.100.2.#{NUMBER}",
+            "ip.start": 5,
+            "ram_mb": 2500,
+            "provisioning": {
+                "k8s.configure": {
+                    "MASTER": "vdi-01-dev-master-00",
+                    "ROLE": "worker",
+                    "k_iface": "eth1"
+                }
+            }
+        }
+    },
+    "packer": {
+        "debian10": {
+            
+        }
+    }
+}
