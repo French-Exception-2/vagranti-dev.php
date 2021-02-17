@@ -3,12 +3,13 @@
 sudo swapoff -a
 
 if [[ $MASTER == $(hostname) ]]; then
+    echo "Running as PRIMARY MASTER"
     k_iface=${k_iface:=enp0s8}
     k_apiserver_advertise_address=${k_apiserver_advertise_address:=$(ip addr show $k_iface | grep -Po 'inet \K[\d.]+')}
     k_pod_network_cidr=${k_pod_network_cidr:="172.18.0.0/16"}
 
     sudo kubeadm init --apiserver-advertise-address=${k_apiserver_advertise_address} --pod-network-cidr=${k_pod_network_cidr} 
-    mkdir -p $HOME/.kube
+    (mkdir -p $HOME/.kube) || true
     (rm /vagrant/instance/k8s.conf) || true
     sudo cp -i /etc/kubernetes/admin.conf /vagrant/instance/k8s.conf
     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -28,6 +29,13 @@ EOF
     echo "$config" | tee /vagrant/instance/kubernetes-hosts/$(hostname).json
 else
     ROLE=${ROLE:="master"}
+
+    if [[ $ROLE == "master" ]]; then 
+        echo "Running as (secondary) MASTER"
+    else
+        echo "Running as WORKER"
+    fi
+
     mkdir -p $HOME/.kube
     sudo cp -fi /vagrant/instance/k8s.conf $HOME/.kube/config
     sudo chown $(id -u):$(id -g) $HOME/.kube/config

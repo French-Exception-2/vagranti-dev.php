@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
-sudo apt-get install -y python3-pip
-echo "export PATH=/home/vagrant/.local/bin:\$PATH" | tee -a $HOME/.bashrc
-pip3 install yq
+VERSION=${VERSION:="v4.5.1"}
+
+sudo wget https://github.com/mikefarah/yq/releases/download/${VERSION}/yq_linux_amd64 -O /usr/bin/yq
+sudo chmod +x /usr/bin/yq

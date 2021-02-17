@@ -21,7 +21,7 @@
       ],
       "boot_wait": "5s",
       "disk_size": 81920,
-      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "guest_additions_path": "VBoxGuestAdditions.iso",
       "guest_os_type": "Debian_64",
       "headless": true,
       "http_directory": "http",
@@ -178,6 +178,19 @@
     },
     {
       "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "provisioning/{{user `os_type`}}/{{user `os_version`}}/kernel.update.sh",
+      "type": "shell",
+      "environment_vars":[
+        "kernel_version={{user `kernel_version` }}"
+      ]
+    },
+    {
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "provisioning/{{user `os_type`}}/{{user `os_version`}}/virtualbox.guest.additions.install.sh",
+      "type": "shell"
+    },
+    {
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "script": "provisioning/{{user `os_type`}}/{{user `os_version`}}/ipv6.disable.sh",
       "type": "shell"
     },
@@ -219,12 +232,13 @@
     }
   ],
   "variables": {
+    "kernel_version": "5.9.0-0.bpo.5",
     "version": "0.0.1",
     "version_str": "0_0_1",
-    "os_type": "Debian_64",
+    "os_type": "debian_64",
     "ov_version": "10.8.0",
     "keyboard_layout": "fr",
-    "box_kind": "docker-k8s",
+    "box_kind": "docker-kubernetes",
     "vbox_group": "Frenchex2 VagrantI I2",
     "out": "{{.Provider}}-{{user `os_type`}}-{{user `os_version`}}-{{user `box_kind`}}-amd64"
   }

@@ -6,5 +6,6 @@ param(
 
 write-output ""
 write-output "Now that Infrastructure services are up, "
-write-output "You can create a Packer box,"
+write-output "You can create a Packer box by running :"
+write-output "./bin/Build-PackerBox.ps1"
 write-output "Or you can directly use Vagrant Cloud Boxes."

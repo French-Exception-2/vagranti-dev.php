@@ -8,7 +8,7 @@ ENV["LC_ALL"] = "en_US.UTF-8"
 # Get this file directory
   dir = File.dirname(File.expand_path(__FILE__))
 
-# Load Configuration & its Overload
+# Load Configuration
   require 'json'
   vagrant_config = JSON.parse(File.read(File.join(dir,"\\instance\\config.json")))
 

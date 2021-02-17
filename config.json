@@ -76,7 +76,7 @@
                 },
                 "apt.proxy.configure": {
                     "env": {
-                        "APT_IP_FILE": "/vagrant/instance/IPv4/vdi-01-infra-dev-00"
+                        "APT_IP_FILE": "/vagrant/instance/IPv4/vdi-02-infra-dev-00"
                     }
                 },
                 "jq.install": {},
@@ -122,7 +122,7 @@
             "gui": false,
             "provider": "virtualbox",
             "enabled": true,
-            "box": "debian-k8s",
+            "box": "docker-kubernetes",
             "provisioning": {
                 "cat-infos": {
                     "env": {
@@ -135,16 +135,14 @@
                 },
                 "apt.proxy.configure": {
                     "env": {
-                        "APT_IP_FILE": "/vagrant/instance/IPv4/vdi-01-infra-dev-00"
+                        "APT_IP_FILE": "/vagrant/instance/IPv4/vdi-02-infra-dev-00"
                     }
                 },
-                "docker.install": {},
                 "docker.configure": {
                     "env": {
                         "bind_address": "0.0.0.0"
                     }
                 },
-                "k8s.install": {},
                 "k8s.configure": {
                     "env": {
                         "k_iface": "enp0s8"
@@ -195,9 +193,9 @@
             "ram_mb": 2048,
             "provisioning": {
                 "k8s.configure": {
-                    "MASTER": "vdi-01-dev-master-00",
+                    "MASTER": "vdi-02-dev-master-00",
                     "ROLE": "master",
-                    "k_iface": "eth1"
+                    "k_iface": "enp0s8"
                 }
             }
         },
@@ -212,9 +210,9 @@
             "ram_mb": 2500,
             "provisioning": {
                 "k8s.configure": {
-                    "MASTER": "vdi-01-dev-master-00",
+                    "MASTER": "vdi-02-dev-master-00",
                     "ROLE": "worker",
-                    "k_iface": "eth1"
+                    "k_iface": "enp0s8"
                 }
             }
         }

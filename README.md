@@ -12,6 +12,8 @@ Uses VirtualBox as VM runtime.
 
 Works on Windows, MAC OSX, GNU/Linux.
 
+Uses PowerShell Core (7.1.2) on Host and sometimes on Guest.
+
 
 # Cloning
 
@@ -35,14 +37,14 @@ $mastersRamMB = 2048                            # How much memory each master ca
 $mastersVcpus = 2                               # How much vcpus each master can take ?
 $mastersIpPattern = "10.100.2.#{NUMBER}"        # Which IP pattern to use ?
 $mastersIpStart = 2                             # Start IP from ?
-$mastersBox = "docker-k8s"                      # Which box to use for each master ?
+$mastersBox = "docker-kubernetes"                      # Which box to use for each master ?
 
 $workers = 2                                    # How many Workers do you want ?
 $workersRamMB = 3076                            # How much memory each worker can take ?
 $workersVcpus = 2                               # How much vcpus each worker can take ?
 $WorkersIPPattern = "10.100.2.#{NUMBER}"        # Which IP pattern to use ?
 $workersIpStart = 100                           # Start IP from ?
-$workersBox = "docker-k8s"                      # Which box to use for each worker ?
+$workersBox = "docker-kubernetes"                      # Which box to use for each worker ?
 
 $devs = 1                                       # How many side-VM do you want ?
 $devsRamMB = 1024                               # How much memory each worker can take ?
@@ -50,7 +52,8 @@ $devsVcpus = 4                                  # How much vcpus each worker can
 $DevsIPPattern = "10.100.2.#{NUMBER}"           # Which IP pattern to use ?
 $DevsIpStart = 200                              # Start IP from ?
 $devsBox = "debian/contrib-buster64"            # Which box to use for each side VM ?
-$CodePath = "c:\\code\\"                        # Shared folder on host
+
+$CodePath = "c:\\code\\"                        # Shared folder on host, connected to side-VMs
 
 # will produce ./config-$env.json
 # will merge ./config.json & ./config-$env.json into ./instance/config.json
@@ -100,22 +103,33 @@ Creating a box let you install docker and kubernetes CLI tooling once and get it
 First, we need to add a new Packer box definition, then build it.
 
 ```powershell
-$boxName = "debian10"
+$osType = "debian_64"
+$osVersion = "10.8.0"
+$boxVersion = "1.0.0"
+$boxKind = "docker-kubernetes"
+$vboxGroup = "Frenchex2 VagrantI Boxing"
+$template = "debian10"
+$boxName = "debian-$osVersion"
+$boxSizeMb = "204800"
+$kernelVersion = "5.9.0-0.bpo.5"
 
-# will create file box-debian10.json from template
-./bin/Add-PackerBox.ps1 -name $boxName
+
+# will create file box-debian10.json from template debian10.json.tpl
+./bin/Add-PackerBox.ps1 -name $boxName -template $template
 
 # edit box-debian10.json file to fit your needs
 # you may want to modify provisionings, disk sizing, etc.
 code "./box-$boxName.json"
 
 # then build box using packer
-./bin/Build-PackerBox.ps1 -name debian10 `
-                          -OS_Type Debian_64 `
-                          -OS_Version 10.8.0 `
-                          -Version 1.0.0 `
-                          -BoxKind "docker-k8s" `
-                          -VBoxGroup "Your Group"
+./bin/Build-PackerBox.ps1 -name "$boxName" `
+                          -KernelVersion "$kernelVersion" `
+                          -OS_Type "$osType" `
+                          -OS_Version "$osVersion" `
+                          -Version "$boxVersion" `
+                          -BoxKind "$boxKind" `
+                          -VBoxGroup "$vboxGroup" `
+                          -BoxSizeMB "$boxSizeMb"
 ```
 
 # Running

@@ -66,4 +66,6 @@ config=$(cat <<EOF
 EOF
 )
 
+(mkdir /vagrant/instance/docker-hosts) || true
+
 echo "$config" | tee /vagrant/instance/docker-hosts/$(hostname).json
