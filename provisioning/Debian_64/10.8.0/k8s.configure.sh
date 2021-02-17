@@ -9,6 +9,7 @@ if [[ $MASTER == $(hostname) ]]; then
     k_pod_network_cidr=${k_pod_network_cidr:="172.18.0.0/16"}
 
     sudo kubeadm init --apiserver-advertise-address=${k_apiserver_advertise_address} --pod-network-cidr=${k_pod_network_cidr} 
+    
     (mkdir -p $HOME/.kube) || true
     (rm /vagrant/instance/k8s.conf) || true
     sudo cp -i /etc/kubernetes/admin.conf /vagrant/instance/k8s.conf
@@ -19,7 +20,7 @@ if [[ $MASTER == $(hostname) ]]; then
     cat /vagrant/instance/k8s.join.command.create.sh
     chmod +x /vagrant/instance/k8s.join.command.create.sh
     sudo cp -f /var/lib/kubelet/pki/kubelet-client-current.pem /vagrant/instance/kubelet-client-current.pem
-
+    (mkdir /vagrant/instance/kubernetes-hosts) || true
     config=$(cat <<EOF
 {
     "config": "/vagrant/instance/k8s.conf"
