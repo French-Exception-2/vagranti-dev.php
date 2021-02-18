@@ -10,3 +10,4 @@ $vdi_instance_machine_number = '{0:d2}' -f $Instance
 $vdi_instance_machine_fullname = "${vdi_instance_fullname}-$Name-${vdi_instance_machine_number}"
 
 vagrant up $vdi_instance_machine_fullname --no-provision
+vagrant hostmanager $vdi_instance_machine_fullname
