@@ -2,8 +2,15 @@
 
 sudo swapoff -a
 
+
 if [[ $MASTER == $(hostname) ]]; then
     echo "Running as PRIMARY MASTER"
+    sudo ufw allow 6443/tcp
+    sudo ufw allow 2379:2380/tcp
+    sudo ufw allow 10250/tcp
+    sudo ufw allow 10251/tcp
+    sudo ufw allow 10252/tcp
+
     k_iface=${k_iface:=enp0s8}
     k_apiserver_advertise_address=${k_apiserver_advertise_address:=$(ip addr show $k_iface | grep -Po 'inet \K[\d.]+')}
     k_pod_network_cidr=${k_pod_network_cidr:="172.18.0.0/16"}
@@ -36,6 +43,9 @@ else
     else
         echo "Running as WORKER"
     fi
+
+    sudo ufw allow 10250/tcp
+    sudo ufw allow 30000:32767/tcp
 
     mkdir -p $HOME/.kube
     sudo cp -fi /vagrant/instance/k8s.conf $HOME/.kube/config
