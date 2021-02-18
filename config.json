@@ -5,7 +5,7 @@
                 "version": ">= 1.8.9",
                 "enabled": true,
                 "config": {
-                    "hostmanager.enabled": true,
+                    "hostmanager.enabled": false,
                     "hostmanager.manage_host": true,
                     "hostmanager.manage_guest": true
                 }
