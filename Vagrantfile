@@ -124,6 +124,10 @@ Vagrant.configure(VAGRANT_VERSION) do |config|
           vb.gui    = server["gui"]
         end # srv.vm.provider virtualbox
   
+        if (Vagrant.has_plugin?('vagrant-hostmanager') && true == vagrant_config['vagrant']['plugins']['vagrant-vbguest']['enabled'])
+          config.vm.provision :hostmanager
+        end
+
         if (server['files'])
           server['files'].each do |key,value|
             if (value['enabled'] && true != value['enabled'])
